@@ -1,10 +1,13 @@
 -- -*- mode: lua; encoding: windows-1251 -*-
 
+-- APP: remove drop weapon during running and reload
+
 local get_wnd = level.main_input_receiver
 local binds_actions = {}
 local dik_actions = {}
 
-local DROP_ITEM_SPRINT_RND = 0.6
+-- APP: На всякий случай и здесь 0.0 - если меньше, то уронит))
+local DROP_ITEM_SPRINT_RND = 0.0
 
 local keys = {
 	[1]  = 'ESCAPE', [21] = 'Y',          [41] = 'GRAVE',     [61] = 'F3',       [81]  = 'NUMPAD3',      [151] = 'UNLABELED',   [221] = 'APPS',
@@ -59,12 +62,14 @@ end
 function switch_grenade()
 	if not Actor:alive() then return end
 
+--[[
 	if actor_active_item and Actor:is_actor_sprinting() then
 		if math.random() < DROP_ITEM_SPRINT_RND then
 			Actor:drop_item(actor_active_item)
 			return
 		end
 	end
+--]]
 
 	if Actor:active_slot() ~= inventory_slots.GRENADE then
 		reload_shotgun()
@@ -448,6 +453,7 @@ binds_actions[key_bindings.kTORCH] = function()
 		snd:play_no_feedback(Actor, sound_object.s2d, 0, vector(), 0.7)
 	end
 end
+--[[ APP
 binds_actions[key_bindings.kWPN_RELOAD] = function()
 	if not Actor:is_actor_sprinting() then return end
 	if math.random() > DROP_ITEM_SPRINT_RND then return end
@@ -458,6 +464,7 @@ binds_actions[key_bindings.kWPN_RELOAD] = function()
 		Actor:drop_item(actor_active_item)
 	end
 end
+
 binds_actions[key_bindings.kWPN_FUNC] = function()
 	if not Actor:is_actor_sprinting() then return end
 	if math.random() > DROP_ITEM_SPRINT_RND then return end
@@ -465,7 +472,7 @@ binds_actions[key_bindings.kWPN_FUNC] = function()
 		Actor:drop_item(actor_active_item)
 	end
 end
-
+--]]
 
 dik_actions[game_options.RunnerKey] = hotkeys.run_or_return
 dik_actions[DIK_keys.DIK_F10] = function()
